@@ -20,19 +20,35 @@
 
 ## 1. Répartition générale des tâches
 
+### Version 1 (côté opérateur)
+
 | Module / Fonctionnalité                          | Responsable | Statut       |
 |---------------------------------------------------|-------------|--------------|
 | Socle commun (architecture, BDD, layout, auth)     | Rary + Mika | ✅ Terminé   |
-| Gestion des clients                                | Rary | ⏳ À faire |
-| Gestion des comptes clients                        | Rary | ⏳ À faire |
-| Opérations (dépôt, retrait, transfert)             | Rary | ⏳ À faire |
-| Notifications (simulation SMS)                     | Rary | ⏳ À faire |
-| Gestion des agents                                  | Mika | ⏳ À faire |
-| Grille tarifaire                                    | Mika | ⏳ À faire |
-| Paramètres système                                  | Mika | ⏳ À faire |
-| Utilisateurs internes & rôles                       | Mika | ⏳ À faire |
-| Rapports & tableau de bord                          | Mika | ⏳ À faire |
-| Journal d'audit (logs)                              | Mika | ⏳ À faire |
+| Gestion des clients                                | Rary | ✅ Terminé |
+| Gestion des comptes clients                        | Rary | ✅ Terminé |
+| Opérations (dépôt, retrait, transfert)             | Rary | ✅ Terminé |
+| Notifications (simulation SMS)                     | Rary | ✅ Terminé |
+| Gestion des agents                                  | Mika | ✅ Terminé |
+| Grille tarifaire                                    | Mika | ✅ Terminé |
+| Paramètres système                                  | Mika | ✅ Terminé |
+| Utilisateurs internes & rôles                       | Mika | ✅ Terminé |
+| Rapports & tableau de bord                          | Mika | ✅ Terminé |
+| Journal d'audit (logs)                              | Mika | ✅ Terminé |
+
+### Version 2 (préfixes opérateurs, commissions, envoi multiple, espace client)
+
+| Module / Fonctionnalité                                          | Responsable | Statut       |
+|---------------------------------------------------------------------|-------------|--------------|
+| Prérequis commun V2 (schéma, `PrefixeOperateurModel`, param. commission) | Rary (avec l'IA) | ✅ Terminé |
+| Configuration des préfixes des autres opérateurs (CRUD)              | Mika | ✅ Terminé |
+| Commission % inter-opérateur                                          | Mika | ✅ Terminé |
+| Rapport "gains via frais" séparé opérateur / autres opérateurs        | Mika | ✅ Terminé |
+| Rapport "montants à envoyer à chaque opérateur"                        | Mika | ✅ Terminé |
+| Option "frais de retrait inclus" à l'envoi                             | Rary | ✅ Terminé |
+| Envoi multiple vers plusieurs numéros (même opérateur)                  | Rary | ✅ Terminé |
+| Règle liste blanche (`PREFIXE_NOTRE_OPERATEUR` = seul préfixe interne)  | Rary (avec l'IA) | ✅ Terminé |
+| Espace client séparé (login par numéro, solde, historique, transfert, envoi multiple) | Rary (avec l'IA) | ✅ Terminé |
 
 _Légende : ⏳ À faire · 🔄 En cours · ✅ Terminé · 🐞 Bug détecté_
 
@@ -44,10 +60,12 @@ _Légende : ⏳ À faire · 🔄 En cours · ✅ Terminé · 🐞 Bug détecté_
 |-----------|-------------|-------------|-------------------------------------------------------|--------|
 | L0 — Socle commun | 2026-07-22 | 2026-07-20 | Architecture, base.sql, Models/Services/Filters communs, layout, installation CI4 propre | ✅ Terminé |
 | L1 — Auth + Dashboard | _(à définir)_ | 2026-07-20 | Authentification, tableau de bord (coquille) | ✅ Terminé |
-| L2 — Fonctionnalités métier v1 | _(à définir)_ | | Clients/Comptes/Transactions (Rary) + Agents/Tarifs (Mika) | ⏳ |
-| L3 — Fonctionnalités métier v2 | _(à définir)_ | | Paramètres, Utilisateurs, Rapports, Logs (Mika) | ⏳ |
-| L4 — Tests & fusion finale | _(à définir)_ | | Tests croisés, fusion vers `main` | ⏳ |
-| L5 — Livraison finale | _(à définir)_ | | Démo / soutenance | ⏳ |
+| L2 — Fonctionnalités métier v1 | _(à définir)_ | 2026-07-20 | Clients/Comptes/Transactions (Rary) + Agents/Tarifs (Mika) | ✅ Terminé |
+| L3 — Fonctionnalités métier v1 (suite) | _(à définir)_ | 2026-07-20 | Paramètres, Utilisateurs, Rapports, Logs (Mika) | ✅ Terminé |
+| L4 — Version 2 (préfixes, commissions, envoi multiple) | _(à définir)_ | 2026-07-20 | Préfixes opérateurs, commission inter-opérateur, frais inclus, envoi multiple — fusionné dans `main` (PR#9) | ✅ Terminé |
+| L5 — Version 2 (ajustements + espace client) | _(à définir)_ | 2026-07-20 | Règle liste blanche du préfixe interne, rapports séparés opérateur/autres, espace client autonome | ✅ Terminé (en attente de push) |
+| L6 — Tests & fusion finale | _(à définir)_ | | Tests croisés complets, fusion `dev_v2` → `main` | ⏳ |
+| L7 — Livraison finale | _(à définir)_ | | Démo / soutenance | ⏳ |
 
 ---
 
@@ -130,6 +148,129 @@ pour la liste détaillée.
 
 ---
 
+### 2026-07-20 — Fonctionnalités métier V1 complètes (Rary + Mika)
+
+**Auteur(s) :** Rary et Mika (avec l'assistant IA)
+
+**Travaux effectués :**
+- Rary : `ClientController`, `CompteController`, `TransactionController`,
+  `DepotController`, `RetraitController`, `TransfertController` (V1, transfert
+  simple entre deux clients internes) + toutes les vues associées. Chaque
+  client créé obtient automatiquement un compte (portefeuille) lié.
+- Mika : `AgentController` + `RechargeAgentController` (avec compte flotte
+  auto-créé), `GrilleTarifaireController`, `ParametreController`,
+  `UtilisateurController`, `RapportController` (v1 : agents actifs, flotte
+  totale, alertes seuil, répartition des transactions), `LogController`.
+  Widgets du tableau de bord (Rary et Mika) branchés sur les vraies données.
+- Fusion du travail des deux (branches `dev_3`/`dev_4`/`dev`) après un
+  incident de synchronisation (travail resté sur une branche non fusionnée)
+  et nettoyage d'un marqueur de conflit Git oublié dans ce fichier.
+- Nettoyage de routes dupliquées/mal placées.
+
+**Fonctionnalités développées / terminées :** Ensemble du périmètre V1
+côté opérateur (Clients, Comptes, Transactions, Agents, Tarifs, Paramètres,
+Utilisateurs, Rapports, Logs).
+
+**Fichiers ajoutés/modifiés :** voir commits `comptes` (dev_3) et
+`ajout des modules tarifs,agents,parametre et admin` (dev_4).
+
+**Points bloquants :** Aucun — testé de bout en bout (création client,
+dépôt, retrait, transfert, recharge agent, comptabilité en partie double
+vérifiée manuellement à chaque étape).
+
+**Prochaine étape :** Cahier des charges Version 2.
+
+---
+
+### 2026-07-20 — Version 2 : conception, prérequis commun et implémentation initiale
+
+**Auteur(s) :** Rary et Mika (avec l'assistant IA)
+
+**Travaux effectués :**
+- Conception de la V2 (`REPARTITION_V2.md`) : préfixes des autres
+  opérateurs, commission inter-opérateur, rapports séparés, envoi multiple,
+  frais de retrait inclus.
+- Prérequis commun : nouvelle table `prefixes_operateurs`, nouveau type de
+  transaction `TRANSFERT_EXTERNE`, colonne `transactions.numero_destination_externe`,
+  paramètre `COMMISSION_INTEROPERATEUR_POURCENTAGE`, `PrefixeOperateurModel`.
+- Rary : option "frais de retrait inclus" (`TransactionService::executerTransfert`),
+  transfert vers un autre opérateur (`executerTransfertExterne`), envoi
+  multiple (`TransfertMultipleController`, montant réparti, réservé au même
+  opérateur, transaction SQL globale tout-ou-rien).
+- Mika : `PrefixeOperateurController` (CRUD des préfixes nommés).
+- **Bug corrigé :** la commission inter-opérateur remplaçait le tarif de
+  transfert normal au lieu de s'y ajouter (grille tarifaire absente pour
+  `TRANSFERT_EXTERNE`) — corrigé pour cumuler tarif normal + commission.
+- Fusionné dans `main` via PR#9 (`dev_v2`).
+
+**Fichiers ajoutés/modifiés :** `TransactionService.php`, `TarifService.php`,
+`TransfertController.php`, `TransfertMultipleController.php`,
+`PrefixeOperateurModel.php`, `PrefixeOperateurController.php`, `base.sql`,
+vues `transactions/transfert*.php`, `parametres/prefixes/*.php`.
+
+**Points bloquants :** Aucun — chaque scénario retesté avec calcul manuel
+des montants (dépôt, retrait, transfert interne, transfert externe, envoi
+multiple).
+
+**Prochaine étape :** Ajustement de la règle interne/externe + rapports
+manquants + espace client.
+
+---
+
+### 2026-07-20 — Version 2 (suite) : règle liste blanche, rapports manquants, espace client séparé
+
+**Auteur(s) :** Rary (avec l'assistant IA)
+
+**Travaux effectués :**
+- Changement de règle interne/externe : passage d'une liste noire
+  (préfixes externes nommés + existence d'un client) à une **liste
+  blanche** — un seul paramètre `PREFIXE_NOTRE_OPERATEUR` (exemple `031`)
+  détermine ce qui est interne, tout le reste est automatiquement externe,
+  même si le préfixe exact n'est pas nommé dans `prefixes_operateurs`.
+  Nouvelle méthode `PrefixeOperateurModel::estInterne()`. Validation
+  ajoutée à la création/modification d'un client (le téléphone doit
+  appartenir à notre préfixe).
+- Ajout des deux rapports manquants de Mika dans `RapportController` :
+  gains via frais séparés "notre opérateur" / "autres opérateurs", et
+  "situation des montants à envoyer à chaque opérateur" (groupé par
+  opérateur, à partir de `numero_destination_externe`).
+- **Bug corrigé :** `numero_destination_externe` manquait dans
+  `$allowedFields` de `TransactionModel` → jamais réellement sauvegardé en
+  base malgré le code déjà écrit ; tous les transferts externes se
+  retrouvaient fusionnés dans un seul groupe vide sur le rapport de
+  règlement. Corrigé.
+- Nouvel **espace client séparé** (changement de portée validé avec
+  l'équipe) : authentification par numéro de téléphone uniquement (pas de
+  mot de passe, simulation), session distincte de l'espace opérateur
+  (`ClientAuthFilter`, `clientauth`), layout dédié. Le client peut
+  consulter son solde et son historique, et effectuer lui-même un
+  transfert (avec frais inclus / détection externe) ou un envoi multiple.
+  Liens croisés entre les deux pages de connexion.
+
+**Fonctionnalités développées / terminées :**
+- `App\Controllers\Client\*` : `ClientAuthController`, `DashboardController`,
+  `TransactionController`, `TransfertController`, `TransfertMultipleController`.
+- Vues `client/auth/login.php`, `client/layouts/main.php`,
+  `client/dashboard/index.php`, `client/transactions/*.php`.
+
+**Fichiers ajoutés/modifiés :** `base.sql`, `PrefixeOperateurModel.php`,
+`TransactionModel.php`, `ClientController.php`, `TransfertController.php`,
+`TransfertMultipleController.php`, `RapportController.php`,
+`rapports/index.php`, `Config/Routes.php`, `Config/Filters.php`,
+`auth_helper.php`, dossier complet `app/Controllers/Client/` et
+`app/Views/client/` (nouveaux).
+
+**Points bloquants :** Aucun — testé de bout en bout dans une session
+navigateur séparée de l'opérateur (connexion client par numéro, protection
+des routes des deux espaces vérifiée indépendamment, transfert avec frais
+inclus, envoi multiple, transfert externe : tous les soldes vérifiés
+exacts par calcul manuel).
+
+**Prochaine étape :** Push de `dev_v2` vers origin (en attente de
+confirmation), puis tests croisés finaux avant fusion vers `main`.
+
+---
+
 ### _(modèle à copier pour chaque nouvelle entrée)_
 
 ### AAAA-MM-JJ — Titre court de la session
@@ -165,7 +306,13 @@ pour la liste détaillée.
 
 | # | Description | Module | Sévérité | Statut | Corrigé le |
 |---|--------------|--------|----------|--------|------------|
-| — | Aucun bug répertorié pour l'instant | — | — | — | — |
+| 1 | INSERT `grille_tarifaire` : 6 colonnes déclarées, 5 valeurs fournies (colonne `actif` en trop dans la liste) | `base.sql` | Moyenne | ✅ Corrigé | 2026-07-20 |
+| 2 | Hash bcrypt du mot de passe admin écrit à la main, invalide | `base.sql` | Haute | ✅ Corrigé | 2026-07-20 |
+| 3 | Recharge de flotte agent débitait le compte SYSTEME (frais collectés) au lieu d'un apport de trésorerie externe | `TransactionService` | Haute | ✅ Corrigé | 2026-07-20 |
+| 4 | Route `/parametres/prefixes` mal montée à la racine `/prefixes` → 404 | `Config/Routes.php` | Moyenne | ✅ Corrigé | 2026-07-20 |
+| 5 | Commission inter-opérateur remplaçait le tarif de transfert normal au lieu de s'y ajouter | `TransactionService::executerTransfertExterne` | Moyenne | ✅ Corrigé | 2026-07-20 |
+| 6 | `numero_destination_externe` absent de `$allowedFields` → jamais sauvegardé, transferts externes fusionnés dans le rapport de règlement | `TransactionModel` | Haute | ✅ Corrigé | 2026-07-20 |
+| 7 | Marqueur de conflit Git (`>>>>>>> dev`) oublié dans `Taches.md` après une fusion | `Taches.md` | Basse | ✅ Corrigé | 2026-07-20 |
 
 ---
 
@@ -177,4 +324,8 @@ pour la liste détaillée.
 | `dev_1` → PR#2 | Ajout des Services métier et des Filters d'authentification |
 | `dev_2` → PR#3 | `commun` — base.sql |
 | `dev_3` → PR#4/#6 | Nettoyage installation CI4 + `Taches.md` rempli + module Clients/Comptes/Transactions (Rary) |
-| `dev_4` (en cours) | Fusion de `dev` (Mika) et `dev_3` (Rary) — travail de Mika à venir |
+| `dev_4` | `ajout des modules tarifs,agents,parametre et admin` (Mika) — fusion de `dev`/`dev_3`/`dev_4` |
+| `dev_6` → PR#7/#8 | `repartition_taches V2`, `Prérequis commun V2`, `realisation_taches V2` (Rary) |
+| `dev_5` | `V2 - Mika : CRUD préfixes des autres opérateurs` |
+| `dev_v2` → PR#9 | Fusion `dev_6` + `dev_5`, correctif commission — **mergé dans `main`** |
+| `dev_v2` (en cours, non poussé) | Règle liste blanche du préfixe interne, rapports séparés/règlement, espace client séparé |

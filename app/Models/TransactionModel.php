@@ -15,7 +15,7 @@ class TransactionModel extends Model
         'reference', 'type_transaction_id', 'compte_source_id', 'compte_destination_id',
         'montant', 'frais', 'montant_total', 'statut', 'motif_echec',
         'initiateur_utilisateur_id', 'initiateur_agent_id', 'description',
-        'date_transaction', 'date_traitement',
+        'numero_destination_externe', 'date_transaction', 'date_traitement',
     ];
 
     protected $validationRules = [

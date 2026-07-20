@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Transactions;
+namespace App\Controllers\Client;
 
 use App\Controllers\BaseController;
 use App\Models\ClientModel;
@@ -14,17 +14,14 @@ class TransfertMultipleController extends BaseController
 {
     public function index()
     {
-        return view('transactions/transfert_multiple', [
-            'clients' => (new ClientModel())->where('statut', 'ACTIF')->orderBy('nom')->findAll(),
-        ]);
+        $compte = (new CompteModel())->findByClientId((int) $this->session->get('clientId'));
+
+        return view('client/transactions/transfert_multiple', ['compte' => $compte]);
     }
 
     public function store()
     {
-        $rules = [
-            'client_source_id' => 'required|is_natural_no_zero',
-            'montant_total'    => 'required|decimal|greater_than[0]',
-        ];
+        $rules = ['montant_total' => 'required|decimal|greater_than[0]'];
 
         if (! $this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
@@ -37,22 +34,23 @@ class TransfertMultipleController extends BaseController
             return redirect()->back()->withInput()->with('error', 'Saisissez au moins deux numéros bénéficiaires distincts pour un envoi multiple.');
         }
 
-        $clientModel = new ClientModel();
-        $compteModel = new CompteModel();
+        $clientModel  = new ClientModel();
+        $compteModel  = new CompteModel();
+        $prefixeModel = new PrefixeOperateurModel();
 
-        $clientSource = $clientModel->find((int) $this->request->getPost('client_source_id'));
-        $compteSource = $clientSource ? $compteModel->findByClientId($clientSource['id']) : null;
+        $clientId     = (int) $this->session->get('clientId');
+        $clientSource = $clientModel->find($clientId);
+        $compteSource = $clientSource ? $compteModel->findByClientId($clientId) : null;
 
         if (! $compteSource) {
-            return redirect()->back()->withInput()->with('error', 'Client émetteur ou compte introuvable.');
+            return redirect()->back()->withInput()->with('error', 'Votre compte est introuvable. Contactez votre agence.');
         }
 
         // Résolution des bénéficiaires : uniquement des numéros de notre opérateur (même réseau).
-        $prefixeModel  = new PrefixeOperateurModel();
         $destinataires = [];
         foreach ($numeros as $numero) {
             if ($numero === $clientSource['telephone']) {
-                return redirect()->back()->withInput()->with('error', "L'émetteur ne peut pas être son propre bénéficiaire.");
+                return redirect()->back()->withInput()->with('error', 'Vous ne pouvez pas être votre propre bénéficiaire.');
             }
 
             if (! $prefixeModel->estInterne($numero)) {
@@ -61,7 +59,7 @@ class TransfertMultipleController extends BaseController
 
             $client = $clientModel->where('telephone', $numero)->first();
             if (! $client) {
-                return redirect()->back()->withInput()->with('error', "Le numéro {$numero} ne correspond à aucun client de notre réseau. L'envoi multiple est réservé aux transferts vers le même opérateur.");
+                return redirect()->back()->withInput()->with('error', "Le numéro {$numero} ne correspond à aucun client de notre réseau.");
             }
 
             $compte = $compteModel->findByClientId($client['id']);
@@ -83,7 +81,6 @@ class TransfertMultipleController extends BaseController
 
         $transactionService  = new TransactionService();
         $notificationService = new NotificationService();
-        $transactionsCreees   = [];
 
         try {
             foreach ($destinataires as $index => $destinataire) {
@@ -93,7 +90,7 @@ class TransfertMultipleController extends BaseController
                     $compteSource['id'],
                     $destinataire['compte']['id'],
                     $montantPart,
-                    $this->session->get('utilisateurId'),
+                    null,
                     $description ?: 'Envoi multiple (' . $nombre . ' bénéficiaires)'
                 );
 
@@ -102,8 +99,6 @@ class TransfertMultipleController extends BaseController
                     'transaction_id' => $transaction['id'],
                     'message'        => 'Vous avez reçu ' . formatMontant($montantPart) . ' via un envoi multiple depuis ' . $compteSource['numero_compte'] . '.',
                 ]);
-
-                $transactionsCreees[] = $transaction;
             }
 
             $db->transComplete();
@@ -117,6 +112,6 @@ class TransfertMultipleController extends BaseController
             return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
 
-        return redirect()->to('/transactions')->with('success', $nombre . ' transferts effectués avec succès (montant réparti automatiquement).');
+        return redirect()->to('/client/dashboard')->with('success', $nombre . ' transferts effectués avec succès (montant réparti automatiquement).');
     }
 }

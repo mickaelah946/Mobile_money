@@ -10,6 +10,20 @@ $routes->get('login', 'Auth\AuthController::showLogin');
 $routes->post('login', 'Auth\AuthController::login');
 $routes->get('logout', 'Auth\AuthController::logout');
 
+// --- Espace client (authentification séparée, par numéro de téléphone) ---
+$routes->get('client/login', 'Client\ClientAuthController::showLogin');
+$routes->post('client/login', 'Client\ClientAuthController::login');
+$routes->get('client/logout', 'Client\ClientAuthController::logout');
+
+$routes->group('client', ['filter' => 'clientauth'], static function (RouteCollection $routes) {
+    $routes->get('dashboard', 'Client\DashboardController::index');
+    $routes->get('transactions', 'Client\TransactionController::index');
+    $routes->get('transfert', 'Client\TransfertController::index');
+    $routes->post('transfert', 'Client\TransfertController::store');
+    $routes->get('transfert-multiple', 'Client\TransfertMultipleController::index');
+    $routes->post('transfert-multiple', 'Client\TransfertMultipleController::store');
+});
+
 // --- Routes protégées (filtre 'auth') ---
 $routes->group('', ['filter' => 'auth'], static function (RouteCollection $routes) {
 

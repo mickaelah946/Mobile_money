@@ -353,11 +353,16 @@ INSERT INTO parametres_systeme (cle, valeur, description) VALUES
 ('PLAFOND_COMPTE_CLIENT',             '2000000', 'Plafond maximal du solde d''un compte client'),
 ('PLAFOND_TRANSACTION_JOURNALIERE',   '1000000', 'Montant cumule maximal des transactions par jour et par client'),
 ('SEUIL_ALERTE_FLOTTE_AGENT',         '20000',   'Solde minimal de flotte en dessous duquel un agent est alerte'),
-('COMMISSION_INTEROPERATEUR_POURCENTAGE', '1.0', 'Commission additionnelle (%) appliquee en plus du tarif de transfert normal, pour les transferts vers un autre operateur');
+('COMMISSION_INTEROPERATEUR_POURCENTAGE', '1.0', 'Commission additionnelle (%) appliquee en plus du tarif de transfert normal, pour les transferts vers un autre operateur'),
+('PREFIXE_NOTRE_OPERATEUR', '031', 'Prefixe telephonique (liste blanche) identifiant les numeros de notre propre operateur (on-net). Tout numero ne commencant pas par ce prefixe est considere comme appartenant a un autre operateur (off-net). Valeur d''exemple, a adapter.');
 
 -- Prefixes de quelques operateurs concurrents (exemple, a completer par Mika)
+-- Utilise uniquement pour NOMMER l'operateur externe dans les rapports, pas
+-- pour determiner si un numero est interne (voir PREFIXE_NOTRE_OPERATEUR).
 INSERT INTO prefixes_operateurs (prefixe, operateur_nom) VALUES
 ('032', 'Orange Money'),
+('033', 'Telma Money'),
+('034', 'Airtel Money'),
 ('038', 'Airtel Money');
 
 -- Compte SYSTEME (collecte des frais operateur) - cree en dernier pour un id stable

@@ -7,6 +7,7 @@ use App\Libraries\ReferenceGenerator;
 use App\Models\ClientModel;
 use App\Models\CompteModel;
 use App\Models\ParametreSystemeModel;
+use App\Models\PrefixeOperateurModel;
 use App\Services\AuditService;
 
 class ClientController extends BaseController
@@ -45,6 +46,10 @@ class ClientController extends BaseController
 
         if (! $this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        if (! (new PrefixeOperateurModel())->estInterne($this->request->getPost('telephone'))) {
+            return redirect()->back()->withInput()->with('error', "Ce numéro n'appartient pas à notre opérateur : seuls les numéros de notre réseau peuvent être enregistrés comme clients.");
         }
 
         $db = \Config\Database::connect();
@@ -118,6 +123,10 @@ class ClientController extends BaseController
 
         if (! $this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        if (! (new PrefixeOperateurModel())->estInterne($this->request->getPost('telephone'))) {
+            return redirect()->back()->withInput()->with('error', "Ce numéro n'appartient pas à notre opérateur : seuls les numéros de notre réseau peuvent être enregistrés comme clients.");
         }
 
         $this->clientModel->update($id, [

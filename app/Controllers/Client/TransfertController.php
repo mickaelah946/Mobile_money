@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Transactions;
+namespace App\Controllers\Client;
 
 use App\Controllers\BaseController;
 use App\Models\ClientModel;
@@ -14,17 +14,16 @@ class TransfertController extends BaseController
 {
     public function index()
     {
-        return view('transactions/transfert', [
-            'clients' => (new ClientModel())->where('statut', 'ACTIF')->orderBy('nom')->findAll(),
-        ]);
+        $compte = (new CompteModel())->findByClientId((int) $this->session->get('clientId'));
+
+        return view('client/transactions/transfert', ['compte' => $compte]);
     }
 
     public function store()
     {
         $rules = [
-            'client_source_id'    => 'required|is_natural_no_zero',
             'telephone_destinataire' => 'required|min_length[8]',
-            'montant'                 => 'required|decimal|greater_than[0]',
+            'montant'                => 'required|decimal|greater_than[0]',
         ];
 
         if (! $this->validate($rules)) {
@@ -34,11 +33,12 @@ class TransfertController extends BaseController
         $clientModel = new ClientModel();
         $compteModel = new CompteModel();
 
-        $clientSource = $clientModel->find((int) $this->request->getPost('client_source_id'));
-        $compteSource = $clientSource ? $compteModel->findByClientId($clientSource['id']) : null;
+        $clientId     = (int) $this->session->get('clientId');
+        $clientSource = $clientModel->find($clientId);
+        $compteSource = $clientSource ? $compteModel->findByClientId($clientId) : null;
 
         if (! $compteSource) {
-            return redirect()->back()->withInput()->with('error', 'Client émetteur ou compte introuvable.');
+            return redirect()->back()->withInput()->with('error', 'Votre compte est introuvable. Contactez votre agence.');
         }
 
         $telephoneDestinataire = trim($this->request->getPost('telephone_destinataire'));
@@ -46,20 +46,19 @@ class TransfertController extends BaseController
         $description             = $this->request->getPost('description');
         $fraisRetraitInclus       = (bool) $this->request->getPost('frais_retrait_inclus');
 
+        if ($telephoneDestinataire === $clientSource['telephone']) {
+            return redirect()->back()->withInput()->with('error', 'Vous ne pouvez pas vous transférer de l\'argent à vous-même.');
+        }
+
         $prefixeModel = new PrefixeOperateurModel();
         $estInterne   = $prefixeModel->estInterne($telephoneDestinataire);
 
         try {
             if ($estInterne) {
-                // --- Transfert interne (numero de notre operateur) ---
                 $clientDestination = $clientModel->where('telephone', $telephoneDestinataire)->first();
 
                 if (! $clientDestination) {
                     return redirect()->back()->withInput()->with('error', "Ce numéro appartient à notre opérateur mais ne correspond à aucun client enregistré.");
-                }
-
-                if ((int) $clientDestination['id'] === (int) $clientSource['id']) {
-                    return redirect()->back()->withInput()->with('error', "L'émetteur et le bénéficiaire doivent être différents.");
                 }
 
                 $compteDestination = $compteModel->findByClientId($clientDestination['id']);
@@ -71,7 +70,7 @@ class TransfertController extends BaseController
                     $compteSource['id'],
                     $compteDestination['id'],
                     $montant,
-                    $this->session->get('utilisateurId'),
+                    null,
                     $description,
                     $fraisRetraitInclus
                 );
@@ -88,9 +87,6 @@ class TransfertController extends BaseController
                     'message'        => 'Transfert recu de ' . formatMontant($montant) . ($fraisRetraitInclus ? ' (frais de retrait deja inclus)' : '') . ' depuis ' . $compteSource['numero_compte'] . '.',
                 ]);
             } else {
-                // --- Transfert externe : tout numero hors de notre prefixe ---
-                // (le nom de l'operateur n'est utilise que pour l'affichage/la
-                // notification ; un prefixe non nomme reste accepte)
                 $operateur    = $prefixeModel->trouverOperateurParNumero($telephoneDestinataire);
                 $nomOperateur = $operateur['operateur_nom'] ?? ('opérateur externe (préfixe ' . substr($telephoneDestinataire, 0, 3) . ')');
 
@@ -98,7 +94,7 @@ class TransfertController extends BaseController
                     $compteSource['id'],
                     $telephoneDestinataire,
                     $montant,
-                    $this->session->get('utilisateurId'),
+                    null,
                     $description
                 );
 
@@ -112,6 +108,6 @@ class TransfertController extends BaseController
             return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
 
-        return redirect()->to('/transactions/' . $transaction['id'])->with('success', 'Transfert effectué avec succès.');
+        return redirect()->to('/client/dashboard')->with('success', 'Transfert effectué avec succès.');
     }
 }

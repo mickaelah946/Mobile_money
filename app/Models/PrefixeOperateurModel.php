@@ -29,10 +29,24 @@ class PrefixeOperateurModel extends Model
     ];
 
     /**
-     * Retrouve l'opérateur externe correspondant à un numéro de téléphone,
-     * en comparant son préfixe à ceux enregistrés (opérateurs actifs
-     * uniquement). Retourne null si le numéro appartient à notre propre
-     * réseau (aucun préfixe externe ne correspond).
+     * Determine si un numero appartient a notre propre operateur (on-net),
+     * selon le parametre PREFIXE_NOTRE_OPERATEUR (liste blanche : un seul
+     * prefixe = nous, tout le reste = un autre operateur).
+     */
+    public function estInterne(string $numero): bool
+    {
+        $prefixeInterne = (new \App\Models\ParametreSystemeModel())->getValeur('PREFIXE_NOTRE_OPERATEUR', '');
+
+        return $prefixeInterne !== '' && str_starts_with($numero, $prefixeInterne);
+    }
+
+    /**
+     * Retrouve le nom de l'operateur externe correspondant a un numero
+     * off-net, a partir des prefixes enregistres (actifs uniquement).
+     * Sert uniquement a NOMMER l'operateur pour les rapports/notifications ;
+     * n'est pas utilise pour decider si un numero est interne ou externe
+     * (voir estInterne()) : un numero off-net reste valide meme si son
+     * prefixe exact n'a pas ete configure ici.
      */
     public function trouverOperateurParNumero(string $numero): ?array
     {

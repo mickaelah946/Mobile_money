@@ -40,3 +40,28 @@ if (! function_exists('hasRole')) {
         return in_array($roleCode, $roles, true);
     }
 }
+
+if (! function_exists('currentClient')) {
+    function currentClient(): ?array
+    {
+        $session = session();
+
+        if (! $session->get('clientLoggedIn')) {
+            return null;
+        }
+
+        return [
+            'id'        => $session->get('clientId'),
+            'nom'       => $session->get('clientNom'),
+            'prenom'    => $session->get('clientPrenom'),
+            'telephone' => $session->get('clientTelephone'),
+        ];
+    }
+}
+
+if (! function_exists('isClientLoggedIn')) {
+    function isClientLoggedIn(): bool
+    {
+        return (bool) session()->get('clientLoggedIn');
+    }
+}
