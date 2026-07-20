@@ -18,8 +18,21 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
     // ================================================================
     // Développeur A — Comptes & Opérations
     // ================================================================
-    $routes->resource('clients', ['controller' => 'Clients\ClientController']);
-    $routes->resource('comptes', ['controller' => 'Comptes\CompteController']);
+    $routes->group('clients', static function (RouteCollection $routes) {
+        $routes->get('/', 'Clients\ClientController::index');
+        $routes->get('create', 'Clients\ClientController::create');
+        $routes->post('/', 'Clients\ClientController::store');
+        $routes->get('(:num)', 'Clients\ClientController::show/$1');
+        $routes->get('(:num)/edit', 'Clients\ClientController::edit/$1');
+        $routes->post('(:num)', 'Clients\ClientController::update/$1');
+        $routes->post('(:num)/statut', 'Clients\ClientController::changerStatut/$1');
+    });
+
+    $routes->group('comptes', static function (RouteCollection $routes) {
+        $routes->get('/', 'Comptes\CompteController::index');
+        $routes->get('(:num)', 'Comptes\CompteController::show/$1');
+        $routes->post('(:num)/statut', 'Comptes\CompteController::changerStatut/$1');
+    });
 
     $routes->group('transactions', static function (RouteCollection $routes) {
         $routes->get('/', 'Transactions\TransactionController::index');
