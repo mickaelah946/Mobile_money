@@ -43,6 +43,8 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
         $routes->post('retrait', 'Transactions\RetraitController::store');
         $routes->get('transfert', 'Transactions\TransfertController::index');
         $routes->post('transfert', 'Transactions\TransfertController::store');
+        $routes->get('transfert-multiple', 'Transactions\TransfertMultipleController::index');
+        $routes->post('transfert-multiple', 'Transactions\TransfertMultipleController::store');
     });
 
     // ================================================================
