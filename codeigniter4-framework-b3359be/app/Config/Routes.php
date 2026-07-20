@@ -2,7 +2,53 @@
 
 use CodeIgniter\Router\RouteCollection;
 
-/**
- * @var RouteCollection $routes
- */
-$routes->get('/', 'Home::index');
+/** @var RouteCollection $routes */
+
+// --- Routes publiques ---
+$routes->get('/', 'Auth\AuthController::showLogin');
+$routes->get('login', 'Auth\AuthController::showLogin');
+$routes->post('login', 'Auth\AuthController::login');
+$routes->get('logout', 'Auth\AuthController::logout');
+
+// --- Routes protégées (filtre 'auth') ---
+$routes->group('', ['filter' => 'auth'], static function (RouteCollection $routes) {
+
+    $routes->get('dashboard', 'DashboardController::index');
+
+    // ================================================================
+    // Développeur A — Comptes & Opérations
+    // ================================================================
+    $routes->resource('clients', ['controller' => 'Clients\ClientController']);
+    $routes->resource('comptes', ['controller' => 'Comptes\CompteController']);
+
+    $routes->group('transactions', static function (RouteCollection $routes) {
+        $routes->get('/', 'Transactions\TransactionController::index');
+        $routes->get('(:num)', 'Transactions\TransactionController::show/$1');
+        $routes->get('depot', 'Transactions\DepotController::index');
+        $routes->post('depot', 'Transactions\DepotController::store');
+        $routes->get('retrait', 'Transactions\RetraitController::index');
+        $routes->post('retrait', 'Transactions\RetraitController::store');
+        $routes->get('transfert', 'Transactions\TransfertController::index');
+        $routes->post('transfert', 'Transactions\TransfertController::store');
+    });
+
+    // ================================================================
+    // Développeur B — Réseau, Tarification & Administration
+    // ================================================================
+    $routes->resource('agents', ['controller' => 'Agents\AgentController']);
+    $routes->get('agents/(:num)/recharge', 'Agents\RechargeAgentController::show/$1');
+    $routes->post('agents/(:num)/recharge', 'Agents\RechargeAgentController::store/$1');
+
+    $routes->resource('tarifs', ['controller' => 'Tarifs\GrilleTarifaireController']);
+
+    $routes->group('parametres', ['filter' => 'role:ADMIN,SUPER_ADMIN'], static function (RouteCollection $routes) {
+        $routes->resource('/', ['controller' => 'Parametres\ParametreController']);
+    });
+
+    $routes->group('utilisateurs', ['filter' => 'role:SUPER_ADMIN'], static function (RouteCollection $routes) {
+        $routes->resource('/', ['controller' => 'Utilisateurs\UtilisateurController']);
+    });
+
+    $routes->get('rapports', 'Rapports\RapportController::index');
+    $routes->get('logs', 'Logs\LogController::index');
+});

@@ -1,0 +1,39 @@
+:root {
+    --mm-sidebar-width: 220px;
+}
+
+body {
+    background-color: #f4f6f9;
+}
+
+.mm-sidebar {
+    width: var(--mm-sidebar-width);
+    min-height: 100vh;
+}
+
+.mm-sidebar .nav-link {
+    color: #cfd8e3;
+}
+
+.mm-sidebar .nav-link.active,
+.mm-sidebar .nav-link:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.mm-content {
+    margin-left: var(--mm-sidebar-width);
+    padding: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .mm-sidebar {
+        position: static;
+        width: 100%;
+        min-height: auto;
+    }
+
+    .mm-content {
+        margin-left: 0;
+    }
+}
