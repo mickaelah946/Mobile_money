@@ -31,8 +31,8 @@
             </div>
             <div class="col-md-6">
                 <label class="form-label">Numéro du bénéficiaire</label>
-                <input type="text" name="telephone_destinataire" class="form-control" value="<?= esc(old('telephone_destinataire')) ?>" placeholder="Ex: 0331234567 ou 0321112233" required>
-                <div class="form-text">Un numéro d'un autre opérateur (préfixe configuré dans les paramètres) est détecté automatiquement.</div>
+                <input type="text" name="telephone_destinataire" class="form-control" value="<?= esc(old('telephone_destinataire')) ?>" placeholder="Ex: 0311234567 (nous) ou 0331112233 (autre opérateur)" required>
+                <div class="form-text">Seuls les numéros commençant par le préfixe de notre opérateur (paramètre <code>PREFIXE_NOTRE_OPERATEUR</code>) sont internes ; tout autre préfixe est automatiquement traité comme un autre opérateur.</div>
             </div>
             <div class="col-md-6">
                 <label class="form-label">Montant</label>

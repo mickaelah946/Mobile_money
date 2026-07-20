@@ -28,6 +28,7 @@
             <div class="col-md-6">
                 <label class="form-label">Téléphone</label>
                 <input type="text" name="telephone" class="form-control" value="<?= esc(old('telephone')) ?>" required>
+                <div class="form-text">Doit commencer par le préfixe de notre opérateur (voir paramètre <code>PREFIXE_NOTRE_OPERATEUR</code>).</div>
             </div>
             <div class="col-md-6">
                 <label class="form-label">Type de pièce</label>

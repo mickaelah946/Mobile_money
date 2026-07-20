@@ -24,8 +24,25 @@
     </div>
     <div class="col-md-3">
         <div class="card"><div class="card-body">
-            <h6 class="card-subtitle text-muted mb-2">Frais collectés (opérateur)</h6>
+            <h6 class="card-subtitle text-muted mb-2">Frais collectés (total)</h6>
             <p class="fs-4 mb-0"><?= formatMontant($fraisCollectes) ?></p>
+        </div></div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card border-primary"><div class="card-body">
+            <h6 class="card-subtitle text-muted mb-2">Gains via frais — notre opérateur</h6>
+            <p class="fs-4 mb-0"><?= formatMontant($fraisOperateur) ?></p>
+            <small class="text-muted">Dépôts, retraits, transferts internes, recharges agent</small>
+        </div></div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-secondary"><div class="card-body">
+            <h6 class="card-subtitle text-muted mb-2">Gains via frais — autres opérateurs</h6>
+            <p class="fs-4 mb-0"><?= formatMontant($fraisAutresOperateurs) ?></p>
+            <small class="text-muted">Tarif de transfert + commission inter-opérateur sur les transferts externes</small>
         </div></div>
     </div>
 </div>
@@ -48,6 +65,34 @@
     </div>
 </div>
 <?php endif; ?>
+
+<div class="card mb-4">
+    <div class="card-header">Situation des montants à envoyer à chaque opérateur</div>
+    <div class="card-body pb-0">
+        <p class="text-muted small mb-3">
+            Montant net (hors frais) des transferts sortants vers chaque opérateur externe,
+            à reverser physiquement pour compenser ces transferts.
+        </p>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-sm mb-0">
+            <thead><tr><th>Opérateur</th><th>Nombre de transferts</th><th>Montant à reverser</th></tr></thead>
+            <tbody>
+                <?php if (empty($montantsParOperateur)): ?>
+                    <tr><td colspan="3" class="text-center text-muted py-4">Aucun transfert vers un autre opérateur pour le moment.</td></tr>
+                <?php else: ?>
+                    <?php foreach ($montantsParOperateur as $nomOperateur => $donnees): ?>
+                        <tr>
+                            <td><?= esc($nomOperateur) ?></td>
+                            <td><?= (int) $donnees['nombre'] ?></td>
+                            <td class="fw-semibold"><?= formatMontant($donnees['montant']) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <div class="card">
     <div class="card-header">Répartition des transactions réussies par type</div>
