@@ -9,28 +9,37 @@ class PrefixeOperateurModel extends Model
     protected $table         = 'prefixes_operateurs';
     protected $primaryKey    = 'id';
     protected $returnType    = 'array';
-    protected $useTimestamps = true;
+    protected $useTimestamps = false;
     protected $createdField  = 'date_creation';
-    protected $updatedField  = '';
 
-    protected $allowedFields = ['prefixe', 'operateur_nom', 'actif'];
+    protected $allowedFields = [
+        'prefixe', 'operateur_nom', 'actif',
+    ];
 
     protected $validationRules = [
-        'prefixe'       => 'required|is_unique[prefixes_operateurs.prefixe,id,{id}]',
+        'prefixe'       => 'required|min_length[2]|max_length[10]|is_unique[prefixes_operateurs.prefixe,id,{id}]',
         'operateur_nom' => 'required|min_length[2]',
+        'actif'         => 'permit_empty|in_list[0,1]',
+    ];
+
+    protected $validationMessages = [
+        'prefixe' => [
+            'is_unique' => 'Ce préfixe est déjà configuré pour un autre opérateur.',
+        ],
     ];
 
     /**
-     * Retourne l'operateur externe correspondant au numero donne, ou null
-     * si le numero appartient a notre propre reseau (aucun prefixe externe
-     * ne correspond).
+     * Retrouve l'opérateur externe correspondant à un numéro de téléphone,
+     * en comparant son préfixe à ceux enregistrés (opérateurs actifs
+     * uniquement). Retourne null si le numéro appartient à notre propre
+     * réseau (aucun préfixe externe ne correspond).
      */
-    public function trouverOperateurParNumero(string $telephone): ?array
+    public function trouverOperateurParNumero(string $numero): ?array
     {
-        $telephone = preg_replace('/\s+/', '', $telephone);
+        $prefixes = $this->where('actif', 1)->findAll();
 
-        foreach ($this->where('actif', 1)->findAll() as $prefixeOperateur) {
-            if (str_starts_with($telephone, $prefixeOperateur['prefixe'])) {
+        foreach ($prefixes as $prefixeOperateur) {
+            if (str_starts_with($numero, $prefixeOperateur['prefixe'])) {
                 return $prefixeOperateur;
             }
         }

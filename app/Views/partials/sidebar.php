@@ -13,6 +13,7 @@
         <a class="nav-link" href="<?= base_url('tarifs') ?>">Grille tarifaire</a>
         <?php if (hasRole(['ADMIN', 'SUPER_ADMIN'])): ?>
             <a class="nav-link" href="<?= base_url('parametres') ?>">Paramètres</a>
+            <a class="nav-link" href="<?= base_url('parametres/prefixes') ?>">Préfixes opérateurs</a>
         <?php endif; ?>
         <?php if (hasRole('SUPER_ADMIN')): ?>
             <a class="nav-link" href="<?= base_url('utilisateurs') ?>">Utilisateurs</a>
