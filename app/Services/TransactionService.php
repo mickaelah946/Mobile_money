@@ -44,6 +44,13 @@ class TransactionService
         return $this->executer('TRANSFERT', $compteSourceId, $compteDestinationId, $montant, null, $utilisateurId, $description);
     }
 
+    public function executerRechargeAgent(int $compteAgentId, float $montant, ?int $utilisateurId = null, ?string $description = null): array
+    {
+        // Apport de trésorerie externe (cash injecté par l'opérateur) : pas de
+        // compte source dans le système, comme pour un dépôt.
+        return $this->executer('RECHARGE_AGENT', null, $compteAgentId, $montant, null, $utilisateurId, $description);
+    }
+
     protected function executer(
         string $codeType,
         ?int $compteSourceId,

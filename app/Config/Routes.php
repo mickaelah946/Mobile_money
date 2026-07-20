@@ -48,20 +48,42 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
     // ================================================================
     // Développeur B — Réseau, Tarification & Administration
     // ================================================================
-    $routes->resource('agents', ['controller' => 'Agents\AgentController']);
-    $routes->get('agents/(:num)/recharge', 'Agents\RechargeAgentController::show/$1');
-    $routes->post('agents/(:num)/recharge', 'Agents\RechargeAgentController::store/$1');
+    $routes->group('agents', static function (RouteCollection $routes) {
+        $routes->get('/', 'Agents\AgentController::index');
+        $routes->get('create', 'Agents\AgentController::create');
+        $routes->post('/', 'Agents\AgentController::store');
+        $routes->get('(:num)', 'Agents\AgentController::show/$1');
+        $routes->get('(:num)/edit', 'Agents\AgentController::edit/$1');
+        $routes->post('(:num)', 'Agents\AgentController::update/$1');
+        $routes->post('(:num)/statut', 'Agents\AgentController::changerStatut/$1');
+        $routes->get('(:num)/recharge', 'Agents\RechargeAgentController::show/$1');
+        $routes->post('(:num)/recharge', 'Agents\RechargeAgentController::store/$1');
+    });
 
-    $routes->resource('tarifs', ['controller' => 'Tarifs\GrilleTarifaireController']);
+    $routes->group('tarifs', static function (RouteCollection $routes) {
+        $routes->get('/', 'Tarifs\GrilleTarifaireController::index');
+        $routes->get('create', 'Tarifs\GrilleTarifaireController::create');
+        $routes->post('/', 'Tarifs\GrilleTarifaireController::store');
+        $routes->get('(:num)/edit', 'Tarifs\GrilleTarifaireController::edit/$1');
+        $routes->post('(:num)', 'Tarifs\GrilleTarifaireController::update/$1');
+        $routes->post('(:num)/statut', 'Tarifs\GrilleTarifaireController::changerStatut/$1');
+    });
 
     $routes->group('parametres', ['filter' => 'role:ADMIN,SUPER_ADMIN'], static function (RouteCollection $routes) {
-        $routes->resource('/', ['controller' => 'Parametres\ParametreController']);
+        $routes->get('/', 'Parametres\ParametreController::index');
+        $routes->post('(:num)', 'Parametres\ParametreController::update/$1');
     });
 
     $routes->group('utilisateurs', ['filter' => 'role:SUPER_ADMIN'], static function (RouteCollection $routes) {
-        $routes->resource('/', ['controller' => 'Utilisateurs\UtilisateurController']);
+        $routes->get('/', 'Utilisateurs\UtilisateurController::index');
+        $routes->get('create', 'Utilisateurs\UtilisateurController::create');
+        $routes->post('/', 'Utilisateurs\UtilisateurController::store');
+        $routes->get('(:num)/edit', 'Utilisateurs\UtilisateurController::edit/$1');
+        $routes->post('(:num)', 'Utilisateurs\UtilisateurController::update/$1');
+        $routes->post('(:num)/statut', 'Utilisateurs\UtilisateurController::changerStatut/$1');
     });
 
     $routes->get('rapports', 'Rapports\RapportController::index');
+
     $routes->get('logs', 'Logs\LogController::index');
 });

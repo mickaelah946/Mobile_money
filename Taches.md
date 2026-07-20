@@ -176,5 +176,5 @@ pour la liste détaillée.
 | `dev_1` → PR#1 | `codeigniter_4` — première installation (à remplacer) |
 | `dev_1` → PR#2 | Ajout des Services métier et des Filters d'authentification |
 | `dev_2` → PR#3 | `commun` — base.sql |
-| `dev_3` (en cours) | Nettoyage installation CI4 + `Taches.md` rempli |
->>>>>>> dev
+| `dev_3` → PR#4/#6 | Nettoyage installation CI4 + `Taches.md` rempli + module Clients/Comptes/Transactions (Rary) |
+| `dev_4` (en cours) | Fusion de `dev` (Mika) et `dev_3` (Rary) — travail de Mika à venir |
