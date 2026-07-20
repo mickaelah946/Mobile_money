@@ -160,6 +160,7 @@ CREATE TABLE transactions (
     initiateur_utilisateur_id    INTEGER,
     initiateur_agent_id          INTEGER,
     description                  TEXT,
+    numero_destination_externe   TEXT,       -- V2 : numero du beneficiaire quand il appartient a un autre operateur (compte_destination_id est alors NULL)
     date_transaction             DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     date_traitement               DATETIME,
     FOREIGN KEY (type_transaction_id) REFERENCES types_transaction(id) ON DELETE RESTRICT,
@@ -247,6 +248,21 @@ CREATE TABLE notifications (
 );
 
 -- =====================================================================
+-- 13. PREFIXES_OPERATEURS (V2)
+--     Prefixes telephoniques appartenant a d'autres operateurs mobile
+--     money. Un numero dont le prefixe n'apparait pas ici est considere
+--     comme appartenant a notre propre reseau.
+-- =====================================================================
+DROP TABLE IF EXISTS prefixes_operateurs;
+CREATE TABLE prefixes_operateurs (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    prefixe         TEXT NOT NULL UNIQUE,      -- ex: '032', '038'
+    operateur_nom   TEXT NOT NULL,             -- ex: 'Orange Money'
+    actif           INTEGER NOT NULL DEFAULT 1,
+    date_creation   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- =====================================================================
 -- VUES SQL
 -- =====================================================================
 
@@ -320,7 +336,8 @@ INSERT INTO types_transaction (code, libelle, description) VALUES
 ('RETRAIT',        'Retrait',               'Retrait d''especes depuis le compte d''un client via un agent'),
 ('TRANSFERT',      'Transfert',             'Transfert d''argent entre deux comptes clients'),
 ('PAIEMENT',       'Paiement',              'Paiement de facture ou marchand'),
-('RECHARGE_AGENT', 'Recharge flotte agent', 'Approvisionnement du compte flotte d''un agent par l''operateur');
+('RECHARGE_AGENT', 'Recharge flotte agent', 'Approvisionnement du compte flotte d''un agent par l''operateur'),
+('TRANSFERT_EXTERNE', 'Transfert vers un autre operateur', 'Transfert envoye vers un numero n''appartenant pas a notre reseau');
 
 -- Grille tarifaire initiale (exemple de bareme)
 INSERT INTO grille_tarifaire (type_transaction_id, montant_min, montant_max, frais_fixe, frais_pourcentage) VALUES
@@ -335,7 +352,13 @@ INSERT INTO parametres_systeme (cle, valeur, description) VALUES
 ('DEVISE',                            'MGA',     'Devise utilisee par la plateforme'),
 ('PLAFOND_COMPTE_CLIENT',             '2000000', 'Plafond maximal du solde d''un compte client'),
 ('PLAFOND_TRANSACTION_JOURNALIERE',   '1000000', 'Montant cumule maximal des transactions par jour et par client'),
-('SEUIL_ALERTE_FLOTTE_AGENT',         '20000',   'Solde minimal de flotte en dessous duquel un agent est alerte');
+('SEUIL_ALERTE_FLOTTE_AGENT',         '20000',   'Solde minimal de flotte en dessous duquel un agent est alerte'),
+('COMMISSION_INTEROPERATEUR_POURCENTAGE', '1.0', 'Commission additionnelle (%) appliquee en plus du tarif de transfert normal, pour les transferts vers un autre operateur');
+
+-- Prefixes de quelques operateurs concurrents (exemple, a completer par Mika)
+INSERT INTO prefixes_operateurs (prefixe, operateur_nom) VALUES
+('032', 'Orange Money'),
+('038', 'Airtel Money');
 
 -- Compte SYSTEME (collecte des frais operateur) - cree en dernier pour un id stable
 INSERT INTO comptes (numero_compte, type_compte, client_id, agent_id, solde, plafond, statut) VALUES

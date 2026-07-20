@@ -5,6 +5,7 @@ namespace App\Controllers\Transactions;
 use App\Controllers\BaseController;
 use App\Models\ClientModel;
 use App\Models\CompteModel;
+use App\Models\PrefixeOperateurModel;
 use App\Services\NotificationService;
 use App\Services\TransactionService;
 use Throwable;
@@ -21,45 +22,86 @@ class TransfertController extends BaseController
     public function store()
     {
         $rules = [
-            'client_source_id'      => 'required|is_natural_no_zero',
-            'client_destination_id' => 'required|is_natural_no_zero|differs[client_source_id]',
-            'montant'                => 'required|decimal|greater_than[0]',
+            'client_source_id'    => 'required|is_natural_no_zero',
+            'telephone_destinataire' => 'required|min_length[8]',
+            'montant'                 => 'required|decimal|greater_than[0]',
         ];
 
         if (! $this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+        $clientModel = new ClientModel();
         $compteModel = new CompteModel();
-        $clientSource      = (new ClientModel())->find((int) $this->request->getPost('client_source_id'));
-        $clientDestination = (new ClientModel())->find((int) $this->request->getPost('client_destination_id'));
-        $compteSource      = $clientSource ? $compteModel->findByClientId($clientSource['id']) : null;
-        $compteDestination = $clientDestination ? $compteModel->findByClientId($clientDestination['id']) : null;
 
-        if (! $compteSource || ! $compteDestination) {
-            return redirect()->back()->withInput()->with('error', 'Compte source ou destination introuvable.');
+        $clientSource = $clientModel->find((int) $this->request->getPost('client_source_id'));
+        $compteSource = $clientSource ? $compteModel->findByClientId($clientSource['id']) : null;
+
+        if (! $compteSource) {
+            return redirect()->back()->withInput()->with('error', 'Client émetteur ou compte introuvable.');
         }
 
-        try {
-            $transaction = (new TransactionService())->executerTransfert(
-                $compteSource['id'],
-                $compteDestination['id'],
-                (float) $this->request->getPost('montant'),
-                $this->session->get('utilisateurId'),
-                $this->request->getPost('description')
-            );
+        $telephoneDestinataire = trim($this->request->getPost('telephone_destinataire'));
+        $montant                = (float) $this->request->getPost('montant');
+        $description             = $this->request->getPost('description');
+        $fraisRetraitInclus       = (bool) $this->request->getPost('frais_retrait_inclus');
 
-            $notificationService = new NotificationService();
-            $notificationService->envoyer([
-                'client_id'      => $clientSource['id'],
-                'transaction_id' => $transaction['id'],
-                'message'        => 'Transfert de ' . formatMontant((float) $transaction['montant']) . ' envoye vers ' . $compteDestination['numero_compte'] . '.',
-            ]);
-            $notificationService->envoyer([
-                'client_id'      => $clientDestination['id'],
-                'transaction_id' => $transaction['id'],
-                'message'        => 'Transfert de ' . formatMontant((float) $transaction['montant']) . ' recu depuis ' . $compteSource['numero_compte'] . '.',
-            ]);
+        $clientDestination = $clientModel->where('telephone', $telephoneDestinataire)->first();
+
+        try {
+            if ($clientDestination) {
+                // --- Transfert interne (client de notre reseau) ---
+                if ((int) $clientDestination['id'] === (int) $clientSource['id']) {
+                    return redirect()->back()->withInput()->with('error', "L'émetteur et le bénéficiaire doivent être différents.");
+                }
+
+                $compteDestination = $compteModel->findByClientId($clientDestination['id']);
+                if (! $compteDestination) {
+                    return redirect()->back()->withInput()->with('error', 'Le bénéficiaire n\'a pas de compte associé.');
+                }
+
+                $transaction = (new TransactionService())->executerTransfert(
+                    $compteSource['id'],
+                    $compteDestination['id'],
+                    $montant,
+                    $this->session->get('utilisateurId'),
+                    $description,
+                    $fraisRetraitInclus
+                );
+
+                $notificationService = new NotificationService();
+                $notificationService->envoyer([
+                    'client_id'      => $clientSource['id'],
+                    'transaction_id' => $transaction['id'],
+                    'message'        => 'Transfert de ' . formatMontant($montant) . ' envoye vers ' . $compteDestination['numero_compte'] . '.',
+                ]);
+                $notificationService->envoyer([
+                    'client_id'      => $clientDestination['id'],
+                    'transaction_id' => $transaction['id'],
+                    'message'        => 'Transfert recu de ' . formatMontant($montant) . ($fraisRetraitInclus ? ' (frais de retrait deja inclus)' : '') . ' depuis ' . $compteSource['numero_compte'] . '.',
+                ]);
+            } else {
+                // --- Transfert externe (vers un autre operateur) ---
+                $operateur = (new PrefixeOperateurModel())->trouverOperateurParNumero($telephoneDestinataire);
+
+                if ($operateur === null) {
+                    return redirect()->back()->withInput()->with('error', "Numéro inconnu : aucun client de notre réseau ni préfixe d'un autre opérateur ne correspond.");
+                }
+
+                $transaction = (new TransactionService())->executerTransfertExterne(
+                    $compteSource['id'],
+                    $telephoneDestinataire,
+                    $montant,
+                    $this->session->get('utilisateurId'),
+                    $description
+                );
+
+                (new NotificationService())->envoyer([
+                    'client_id'      => $clientSource['id'],
+                    'transaction_id' => $transaction['id'],
+                    'message'        => 'Transfert de ' . formatMontant($montant) . ' envoye vers ' . $telephoneDestinataire . ' (' . $operateur['operateur_nom'] . ').',
+                ]);
+            }
         } catch (Throwable $e) {
             return redirect()->back()->withInput()->with('error', $e->getMessage());
         }

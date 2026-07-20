@@ -43,6 +43,8 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
         $routes->post('retrait', 'Transactions\RetraitController::store');
         $routes->get('transfert', 'Transactions\TransfertController::index');
         $routes->post('transfert', 'Transactions\TransfertController::store');
+        $routes->get('transfert-multiple', 'Transactions\TransfertMultipleController::index');
+        $routes->post('transfert-multiple', 'Transactions\TransfertMultipleController::store');
     });
 
     // ================================================================
@@ -86,4 +88,15 @@ $routes->group('', ['filter' => 'auth'], static function (RouteCollection $route
     $routes->get('rapports', 'Rapports\RapportController::index');
 
     $routes->get('logs', 'Logs\LogController::index');
+
+    $routes->group('parametres/prefixes', static function (RouteCollection $routes) {
+        $routes->get('/', 'Parametres\PrefixeOperateurController::index');
+        $routes->get('create', 'Parametres\PrefixeOperateurController::create');
+        $routes->post('/', 'Parametres\PrefixeOperateurController::store');
+        $routes->get('(:num)/edit', 'Parametres\PrefixeOperateurController::edit/$1');
+        $routes->post('(:num)', 'Parametres\PrefixeOperateurController::update/$1');
+        $routes->post('(:num)/statut', 'Parametres\PrefixeOperateurController::changerStatut/$1');
+        $routes->post('(:num)/delete', 'Parametres\PrefixeOperateurController::delete/$1');
+    });
 });
+
