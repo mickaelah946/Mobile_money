@@ -170,9 +170,13 @@ class TransactionService
             if ($compteDestination) {
                 $montantCredit    = $montant + $bonusDestination;
                 $avant            = (float) $compteDestination['solde'];
-                $compteDestination = $this->compteService->crediter($compteDestination, $montantCredit);
+                 $compteDestination = $codeType === 'TRANSFERT'
+                ? $this->compteService->crediterAvecEpargne($compteDestination, $montantCredit)
+                : $this->compteService->crediter($compteDestination,$montantCredit);
+
                 $this->enregistrerMouvement($transactionId, $compteDestination['id'], 'CREDIT', $montantCredit, $avant, (float) $compteDestination['solde']);
             }
+           
 
             // Les frais collectés (standard + supplémentaire) alimentent le compte SYSTEME
             if ($frais > 0) {

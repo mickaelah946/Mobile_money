@@ -46,4 +46,10 @@ class CompteService
 
         return array_merge($compte, ['solde' => $nouveauSolde]);
     }
+    
+    public function crediterAvecEpargne(array $compte, float $montant): array
+    {
+        $partEpargne = round($montant *((float) $compte['pourcentage_epargne']) /100,2);
+        $partSolde = $montant - $partEpargne;
+    }
 }

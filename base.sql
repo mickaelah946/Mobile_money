@@ -105,6 +105,8 @@ CREATE TABLE comptes (
         (type_compte = 'AGENT'   AND agent_id  IS NOT NULL AND client_id IS NULL) OR
         (type_compte = 'SYSTEME' AND client_id IS NULL AND agent_id IS NULL)
     )
+    solde_epargne  REAL NOT DEFAULT 0 CHECK (solde_epargne >=0),
+    pourcentage_epargne REAL NOT NULL 0 CHECK (pourcentage_epargne BETWEEN 0 AND 100),
 );
 CREATE INDEX idx_comptes_type ON comptes(type_compte);
 
