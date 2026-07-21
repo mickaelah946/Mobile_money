@@ -109,6 +109,7 @@ class TransactionService
             if ($compteDestination) {
                 $avant            = (float) $compteDestination['solde'];
                 $compteDestination = $this->compteService->crediter($compteDestination, $montant);
+                $promotionInterne = false;
                 $this->enregistrerMouvement($transactionId, $compteDestination['id'], 'CREDIT', $montant, $avant, (float) $compteDestination['solde']);
             }
 
@@ -128,6 +129,7 @@ class TransactionService
             ]);
 
             $db->transComplete();
+        
         } catch (Throwable $e) {
             $db->transRollback();
 

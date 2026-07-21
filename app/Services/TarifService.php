@@ -26,4 +26,17 @@ class TarifService
 
         return round($fraisFixe + ($montant * $fraisPourcentage / 100), 2);
     }
+
+    public function appliquePromotionTransfertInterne (float $frais):float
+
+    { $actif= (int) $this -> parametreModel->getValeur('PROMOTION_TRANSFERT_INTERNE_ACTIF',0);
+        if ($actif !== 1)
+            return $frais;
+    
+
+    $reduction = (float) $this->parametreModel->getValeur('PROMOTION_TRANSFERT_INTERNE_REDUCTION_POURCENTGE',0);
+    return round ($frais * (1 - $reduction /100), 2);
+    
+    }
+
 }

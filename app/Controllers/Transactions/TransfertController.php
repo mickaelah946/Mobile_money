@@ -63,7 +63,7 @@ class TransfertController extends BaseController
         } catch (Throwable $e) {
             return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
-
+    
         return redirect()->to('/transactions/' . $transaction['id'])->with('success', 'Transfert effectué avec succès.');
     }
 }

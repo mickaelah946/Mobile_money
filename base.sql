@@ -335,6 +335,8 @@ INSERT INTO parametres_systeme (cle, valeur, description) VALUES
 ('DEVISE',                            'MGA',     'Devise utilisee par la plateforme'),
 ('PLAFOND_COMPTE_CLIENT',             '2000000', 'Plafond maximal du solde d''un compte client'),
 ('PLAFOND_TRANSACTION_JOURNALIERE',   '1000000', 'Montant cumule maximal des transactions par jour et par client'),
+('PRODUCTION_TRANSFERT_IINTERNE_ACTIF ',"1",'Active(1) ou desactive(0)la promotion sur les transferts entre clients du meme operateur.' ),
+('PROMOTION_TRANSFERT_INTERNE_REDUCTION_POURCENTAGE', "50",'pourcentage de reduction applique sur le frais standard d''un transfert interne (ex:50=-50%).');
 ('SEUIL_ALERTE_FLOTTE_AGENT',         '20000',   'Solde minimal de flotte en dessous duquel un agent est alerte');
 
 -- Compte SYSTEME (collecte des frais operateur) - cree en dernier pour un id stable
@@ -344,3 +346,5 @@ INSERT INTO comptes (numero_compte, type_compte, client_id, agent_id, solde, pla
 -- =====================================================================
 -- FIN base.sql
 -- =====================================================================
+
+
