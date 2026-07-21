@@ -160,7 +160,7 @@ pour la liste détaillée.
   auto-créé), `GrilleTarifaireController`, `ParametreController`,
   `UtilisateurController`, `RapportController` (v1 : agents actifs, flotte
   totale, alertes seuil, répartition des transactions), `LogController`.
-  Widgets du tableau de bord (Rary et 3932) branchés sur les vraies données.
+  Widgets du tableau de bord (rary et 3932) branchés sur les vraies données.
 - Fusion du travail des deux (branches `dev_3`/`dev_4`/`dev`) après un
   incident de synchronisation (travail resté sur une branche non fusionnée)
   et nettoyage d'un marqueur de conflit Git oublié dans ce fichier.
@@ -294,7 +294,7 @@ confirmation), puis tests croisés finaux avant fusion vers `main`.
 | `dev_2` → PR#3 | `commun` — base.sql |
 | `dev_3` → PR#4/#6 | Nettoyage installation CI4 + `Taches.md` rempli + module Clients/Comptes/Transactions (4378) |
 | `dev_4` | `ajout des modules tarifs,agents,parametre et admin` (3932) — fusion de `dev`/`dev_3`/`dev_4` |
-| `dev_6` → PR#7/#8 | `repartition_taches V2`, `Prérequis commun V2`, `realisation_taches V2` (Rary) |
+| `dev_6` → PR#7/#8 | `repartition_taches V2`, `Prérequis commun V2`, `realisation_taches V2` (4378) |
 | `dev_5` | `V2 - 3932 : CRUD préfixes des autres opérateurs` |
 | `dev_v2` → PR#9 | Fusion `dev_6` + `dev_5`, correctif commission — **mergé dans `main`** |
 | `dev_v2` (en cours, non poussé) | Règle liste blanche du préfixe interne, rapports séparés/règlement, espace client séparé |

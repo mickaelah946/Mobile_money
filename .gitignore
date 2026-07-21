@@ -46,7 +46,7 @@ $RECYCLE.BIN/
 Vagrantfile
 
 #-------------------------
-# TempoRary Files
+# Temporary Files
 #-------------------------
 /writable/cache/*
 !/writable/cache/index.html
