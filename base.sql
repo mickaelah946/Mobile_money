@@ -356,7 +356,7 @@ INSERT INTO parametres_systeme (cle, valeur, description) VALUES
 ('COMMISSION_INTEROPERATEUR_POURCENTAGE', '1.0', 'Commission additionnelle (%) appliquee en plus du tarif de transfert normal, pour les transferts vers un autre operateur'),
 ('PREFIXE_NOTRE_OPERATEUR', '031', 'Prefixe telephonique (liste blanche) identifiant les numeros de notre propre operateur (on-net). Tout numero ne commencant pas par ce prefixe est considere comme appartenant a un autre operateur (off-net). Valeur d''exemple, a adapter.');
 
--- Prefixes de quelques operateurs concurrents (exemple, a completer par Mika)
+-- Prefixes de quelques operateurs concurrents (exemple, a completer par 3932)
 -- Utilise uniquement pour NOMMER l'operateur externe dans les rapports, pas
 -- pour determiner si un numero est interne (voir PREFIXE_NOTRE_OPERATEUR).
 INSERT INTO prefixes_operateurs (prefixe, operateur_nom) VALUES

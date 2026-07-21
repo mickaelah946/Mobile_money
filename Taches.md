@@ -12,7 +12,7 @@
 | Nom du projet          | Simulation Mobile Money — Module Opérateur          |
 | Framework              | PHP CodeIgniter 4                                   |
 | Base de données        | SQLite 3                                            |
-| Équipe                 | Rary (Comptes & Opérations) · Mika (Réseau & Administration) |
+| Équipe                 | 4378 (Comptes & Opérations) · 3932 (Réseau & Administration) |
 | Dépôt Git               | github.com/mickaelah946/Mobile_money                |
 | Date de démarrage       | 2026-07-20                                           |
 
@@ -24,48 +24,48 @@
 
 | Module / Fonctionnalité                          | Responsable | Statut       |
 |---------------------------------------------------|-------------|--------------|
-| Socle commun (architecture, BDD, layout, auth)     | Rary + Mika | ✅ Terminé   |
-| Gestion des clients                                | Rary | ✅ Terminé |
-| Gestion des comptes clients                        | Rary | ✅ Terminé |
-| Opérations (dépôt, retrait, transfert)             | Rary | ✅ Terminé |
-| Notifications (simulation SMS)                     | Rary | ✅ Terminé |
-| Gestion des agents                                  | Mika | ✅ Terminé |
-| Grille tarifaire                                    | Mika | ✅ Terminé |
-| Paramètres système                                  | Mika | ✅ Terminé |
-| Utilisateurs internes & rôles                       | Mika | ✅ Terminé |
-| Rapports & tableau de bord                          | Mika | ✅ Terminé |
-| Journal d'audit (logs)                              | Mika | ✅ Terminé |
+| Socle commun (architecture, BDD, layout, auth)     | 4378 + 3932 | ✅ Terminé   |
+| Gestion des clients                                | 4378 | ✅ Terminé |
+| Gestion des comptes clients                        | 4378 | ✅ Terminé |
+| Opérations (dépôt, retrait, transfert)             | 4378 | ✅ Terminé |
+| Notifications (simulation SMS)                     | 4378 | ✅ Terminé |
+| Gestion des agents                                  | 3932 | ✅ Terminé |
+| Grille tarifaire                                    | 3932 | ✅ Terminé |
+| Paramètres système                                  | 3932 | ✅ Terminé |
+| Utilisateurs internes & rôles                       | 3932 | ✅ Terminé |
+| Rapports & tableau de bord                          | 3932 | ✅ Terminé |
+| Journal d'audit (logs)                              | 3932 | ✅ Terminé |
 
 ### Version 2 (préfixes opérateurs, commissions, envoi multiple, espace client)
 
 | Module / Fonctionnalité                                          | Responsable | Statut       |
 |---------------------------------------------------------------------|-------------|--------------|
-| Prérequis commun V2 (schéma, `PrefixeOperateurModel`, param. commission) | Rary (avec l'IA) | ✅ Terminé |
-| Configuration des préfixes des autres opérateurs (CRUD)              | Mika | ✅ Terminé |
-| Commission % inter-opérateur                                          | Mika | ✅ Terminé |
-| Rapport "gains via frais" séparé opérateur / autres opérateurs        | Mika | ✅ Terminé |
-| Rapport "montants à envoyer à chaque opérateur"                        | Mika | ✅ Terminé |
-| Option "frais de retrait inclus" à l'envoi                             | Rary | ✅ Terminé |
-| Envoi multiple vers plusieurs numéros (même opérateur)                  | Rary | ✅ Terminé |
-| Règle liste blanche (`PREFIXE_NOTRE_OPERATEUR` = seul préfixe interne)  | Rary (avec l'IA) | ✅ Terminé |
-| Espace client séparé (login par numéro, solde, historique, transfert, envoi multiple) | Rary (avec l'IA) | ✅ Terminé |
+| Prérequis commun V2 (schéma, `PrefixeOperateurModel`, param. commission) | 4378  | ✅ Terminé |
+| Configuration des préfixes des autres opérateurs (CRUD)              | 3932 | ✅ Terminé |
+| Commission % inter-opérateur                                          | 3932 | ✅ Terminé |
+| Rapport "gains via frais" séparé opérateur / autres opérateurs        | 3932 | ✅ Terminé |
+| Rapport "montants à envoyer à chaque opérateur"                        | 3932 | ✅ Terminé |
+| Option "frais de retrait inclus" à l'envoi                             | 4378 | ✅ Terminé |
+| Envoi multiple vers plusieurs numéros (même opérateur)                  | 4378 | ✅ Terminé |
+| Règle liste blanche (`PREFIXE_NOTRE_OPERATEUR` = seul préfixe interne)  | 4378 | ✅ Terminé |
+| Espace client séparé (login par numéro, solde, historique, transfert, envoi multiple) | 4378 | ✅ Terminé |
 
-_Légende : ⏳ À faire · 🔄 En cours · ✅ Terminé · 🐞 Bug détecté_
+
 
 ---
 
 ## 2. Suivi des livraisons
 
-| Livraison | Date prévue | Date réelle | Contenu principal                                   | Statut |
-|-----------|-------------|-------------|-------------------------------------------------------|--------|
-| L0 — Socle commun | 2026-07-22 | 2026-07-20 | Architecture, base.sql, Models/Services/Filters communs, layout, installation CI4 propre | ✅ Terminé |
-| L1 — Auth + Dashboard | _(à définir)_ | 2026-07-20 | Authentification, tableau de bord (coquille) | ✅ Terminé |
-| L2 — Fonctionnalités métier v1 | _(à définir)_ | 2026-07-20 | Clients/Comptes/Transactions (Rary) + Agents/Tarifs (Mika) | ✅ Terminé |
-| L3 — Fonctionnalités métier v1 (suite) | _(à définir)_ | 2026-07-20 | Paramètres, Utilisateurs, Rapports, Logs (Mika) | ✅ Terminé |
-| L4 — Version 2 (préfixes, commissions, envoi multiple) | _(à définir)_ | 2026-07-20 | Préfixes opérateurs, commission inter-opérateur, frais inclus, envoi multiple — fusionné dans `main` (PR#9) | ✅ Terminé |
-| L5 — Version 2 (ajustements + espace client) | _(à définir)_ | 2026-07-20 | Règle liste blanche du préfixe interne, rapports séparés opérateur/autres, espace client autonome | ✅ Terminé (en attente de push) |
-| L6 — Tests & fusion finale | _(à définir)_ | | Tests croisés complets, fusion `dev_v2` → `main` | ⏳ |
-| L7 — Livraison finale | _(à définir)_ | | Démo / soutenance | ⏳ |
+| Livraison | Date réelle | Contenu principal                                   | Statut |
+|-----------|-------------|-------------------------------------------------------|--------|
+| L0 — Socle commun | 2026-07-20 | Architecture, base.sql, Models/Services/Filters communs, layout, installation CI4 propre | ✅ Terminé |
+| L1 — Auth + Dashboard | 2026-07-20 | Authentification, tableau de bord (coquille) | ✅ Terminé |
+| L2 — Fonctionnalités métier v1 | 2026-07-20 | Clients/Comptes/Transactions (4378) + Agents/Tarifs (3932) | ✅ Terminé |
+| L3 — Fonctionnalités métier v1 (suite) | 2026-07-20 | Paramètres, Utilisateurs, Rapports, Logs (3932) | ✅ Terminé |
+| L4 — Version 2 (préfixes, commissions, envoi multiple) | 2026-07-20 | Préfixes opérateurs, commission inter-opérateur, frais inclus, envoi multiple — fusionné dans `main` (PR#9) | ✅ Terminé |
+| L5 — Version 2 (ajustements + espace client) | 2026-07-20 | Règle liste blanche du préfixe interne, rapports séparés opérateur/autres, espace client autonome | ✅ Terminé (en attente de push) |
+
+
 
 ---
 
@@ -74,9 +74,9 @@ _Légende : ⏳ À faire · 🔄 En cours · ✅ Terminé · 🐞 Bug détecté_
 > Une entrée par session de travail. Format : date, auteur, ce qui a été
 > fait, fichiers touchés, points bloquants éventuels.
 
-### 2026-07-20 (matin) — Init projet + installation CodeIgniter 4
+###  — Init projet + installation CodeIgniter 4
 
-**Auteur(s) :** Mika
+**Auteur(s) :** 3932
 
 **Travaux effectués :**
 - Initialisation du dépôt (`Init-projet`).
@@ -94,9 +94,9 @@ une vraie installation Composer (pas de `vendor/`), voir entrée du soir.
 
 ---
 
-### 2026-07-20 (après-midi) — Socle commun (architecture, base.sql, journal)
+### — Socle commun (architecture, base.sql, journal)
 
-**Auteur(s) :** Rary (avec l'assistant IA)
+**Auteur(s) :** 4378 
 
 **Travaux effectués :**
 - Définition de l'architecture complète du projet CodeIgniter 4.
@@ -104,7 +104,7 @@ une vraie installation Composer (pas de `vendor/`), voir entrée du soir.
   (schéma + contraintes + vues + données initiales).
 - Définition des conventions de nommage (PHP, base de données, routes, vues).
 - Définition de l'organisation Git (branches, commits, stratégie de fusion).
-- Répartition des tâches entre les deux développeurs (Rary / Mika).
+- Répartition des tâches entre les deux développeurs (4378 / 3932).
 
 **Fichiers ajoutés/modifiés :**
 - `base.sql`
@@ -114,9 +114,9 @@ une vraie installation Composer (pas de `vendor/`), voir entrée du soir.
 
 ---
 
-### 2026-07-20 (soir) — Nettoyage de l'installation CodeIgniter 4
+###  — Nettoyage de l'installation CodeIgniter 4
 
-**Auteur(s) :** Rary (avec l'assistant IA)
+**Auteur(s) :** 4378
 
 **Travaux effectués :**
 - Diagnostic de `main` : le dossier `codeigniter4-framework-b3359be/`
@@ -135,7 +135,7 @@ une vraie installation Composer (pas de `vendor/`), voir entrée du soir.
 
 **Fonctionnalités développées / terminées :**
 - Authentification (login/logout/session) fonctionnelle de bout en bout.
-- Tableau de bord (coquille avec widgets à compléter par Rary et Mika).
+- Tableau de bord (coquille avec widgets à compléter par 4378 et 3932).
 
 **Fichiers ajoutés/modifiés :** voir `A_FAIRE.md` (diagnostic complet)
 pour la liste détaillée.
@@ -143,25 +143,24 @@ pour la liste détaillée.
 **Points bloquants :** Aucun — application testée et fonctionnelle
 (`php spark serve`, login avec `0340000000` / `Admin@2026`).
 
-**Prochaine étape :** Développement des Controllers/Views de Rary
+**Prochaine étape :** Développement des Controllers/Views de 4378
 (Clients, Comptes, Transactions).
 
 ---
 
-### 2026-07-20 — Fonctionnalités métier V1 complètes (Rary + Mika)
+###  — Fonctionnalités métier V1 complètes (4378 + 3932)
 
-**Auteur(s) :** Rary et Mika (avec l'assistant IA)
-
+**Auteur(s) :** 4378 et 3932
 **Travaux effectués :**
-- Rary : `ClientController`, `CompteController`, `TransactionController`,
+- 4378 : `ClientController`, `CompteController`, `TransactionController`,
   `DepotController`, `RetraitController`, `TransfertController` (V1, transfert
   simple entre deux clients internes) + toutes les vues associées. Chaque
   client créé obtient automatiquement un compte (portefeuille) lié.
-- Mika : `AgentController` + `RechargeAgentController` (avec compte flotte
+- 3932 : `AgentController` + `RechargeAgentController` (avec compte flotte
   auto-créé), `GrilleTarifaireController`, `ParametreController`,
   `UtilisateurController`, `RapportController` (v1 : agents actifs, flotte
   totale, alertes seuil, répartition des transactions), `LogController`.
-  Widgets du tableau de bord (Rary et Mika) branchés sur les vraies données.
+  Widgets du tableau de bord (4378 et 3932) branchés sur les vraies données.
 - Fusion du travail des deux (branches `dev_3`/`dev_4`/`dev`) après un
   incident de synchronisation (travail resté sur une branche non fusionnée)
   et nettoyage d'un marqueur de conflit Git oublié dans ce fichier.
@@ -182,9 +181,9 @@ vérifiée manuellement à chaque étape).
 
 ---
 
-### 2026-07-20 — Version 2 : conception, prérequis commun et implémentation initiale
+###  — Version 2 : conception, prérequis commun et implémentation initiale
 
-**Auteur(s) :** Rary et Mika (avec l'assistant IA)
+**Auteur(s) :** 4378 et 3932 
 
 **Travaux effectués :**
 - Conception de la V2 (`REPARTITION_V2.md`) : préfixes des autres
@@ -193,11 +192,11 @@ vérifiée manuellement à chaque étape).
 - Prérequis commun : nouvelle table `prefixes_operateurs`, nouveau type de
   transaction `TRANSFERT_EXTERNE`, colonne `transactions.numero_destination_externe`,
   paramètre `COMMISSION_INTEROPERATEUR_POURCENTAGE`, `PrefixeOperateurModel`.
-- Rary : option "frais de retrait inclus" (`TransactionService::executerTransfert`),
+- 4378 : option "frais de retrait inclus" (`TransactionService::executerTransfert`),
   transfert vers un autre opérateur (`executerTransfertExterne`), envoi
   multiple (`TransfertMultipleController`, montant réparti, réservé au même
   opérateur, transaction SQL globale tout-ou-rien).
-- Mika : `PrefixeOperateurController` (CRUD des préfixes nommés).
+- 3932 : `PrefixeOperateurController` (CRUD des préfixes nommés).
 - **Bug corrigé :** la commission inter-opérateur remplaçait le tarif de
   transfert normal au lieu de s'y ajouter (grille tarifaire absente pour
   `TRANSFERT_EXTERNE`) — corrigé pour cumuler tarif normal + commission.
@@ -217,9 +216,9 @@ manquants + espace client.
 
 ---
 
-### 2026-07-20 — Version 2 (suite) : règle liste blanche, rapports manquants, espace client séparé
+###   règle liste blanche, rapports manquants, espace client séparé
 
-**Auteur(s) :** Rary (avec l'assistant IA)
+**Auteur(s) :** 4378
 
 **Travaux effectués :**
 - Changement de règle interne/externe : passage d'une liste noire
@@ -230,7 +229,7 @@ manquants + espace client.
   Nouvelle méthode `PrefixeOperateurModel::estInterne()`. Validation
   ajoutée à la création/modification d'un client (le téléphone doit
   appartenir à notre préfixe).
-- Ajout des deux rapports manquants de Mika dans `RapportController` :
+- Ajout des deux rapports manquants de 3932 dans `RapportController` :
   gains via frais séparés "notre opérateur" / "autres opérateurs", et
   "situation des montants à envoyer à chaque opérateur" (groupé par
   opérateur, à partir de `numero_destination_externe`).
@@ -269,40 +268,10 @@ exacts par calcul manuel).
 **Prochaine étape :** Push de `dev_v2` vers origin (en attente de
 confirmation), puis tests croisés finaux avant fusion vers `main`.
 
----
-
-### _(modèle à copier pour chaque nouvelle entrée)_
-
-### AAAA-MM-JJ — Titre court de la session
-
-**Auteur(s) :**
-
-**Travaux effectués :**
--
-
-**Fonctionnalités développées / terminées :**
--
-
-**Fichiers ajoutés/modifiés :**
--
-
-**Points bloquants :**
--
-
-**Prochaine étape :**
--
 
 ---
 
-## 4. Backlog (à faire / idées non planifiées)
-
-| # | Description | Priorité | Proposé par |
-|---|--------------|----------|-------------|
-| 1 | _(exemple)_ Export PDF des relevés de transaction | Basse | |
-
----
-
-## 5. Bugs connus
+## 4. Bugs connus
 
 | # | Description | Module | Sévérité | Statut | Corrigé le |
 |---|--------------|--------|----------|--------|------------|
@@ -316,16 +285,16 @@ confirmation), puis tests croisés finaux avant fusion vers `main`.
 
 ---
 
-## 6. Historique des versions Git
+## 5. Historique des versions Git
 
 | Branche/PR | Description |
 |-------------|--------------|
 | `dev_1` → PR#1 | `codeigniter_4` — première installation (à remplacer) |
 | `dev_1` → PR#2 | Ajout des Services métier et des Filters d'authentification |
 | `dev_2` → PR#3 | `commun` — base.sql |
-| `dev_3` → PR#4/#6 | Nettoyage installation CI4 + `Taches.md` rempli + module Clients/Comptes/Transactions (Rary) |
-| `dev_4` | `ajout des modules tarifs,agents,parametre et admin` (Mika) — fusion de `dev`/`dev_3`/`dev_4` |
-| `dev_6` → PR#7/#8 | `repartition_taches V2`, `Prérequis commun V2`, `realisation_taches V2` (Rary) |
-| `dev_5` | `V2 - Mika : CRUD préfixes des autres opérateurs` |
+| `dev_3` → PR#4/#6 | Nettoyage installation CI4 + `Taches.md` rempli + module Clients/Comptes/Transactions (4378) |
+| `dev_4` | `ajout des modules tarifs,agents,parametre et admin` (3932) — fusion de `dev`/`dev_3`/`dev_4` |
+| `dev_6` → PR#7/#8 | `repartition_taches V2`, `Prérequis commun V2`, `realisation_taches V2` (4378) |
+| `dev_5` | `V2 - 3932 : CRUD préfixes des autres opérateurs` |
 | `dev_v2` → PR#9 | Fusion `dev_6` + `dev_5`, correctif commission — **mergé dans `main`** |
 | `dev_v2` (en cours, non poussé) | Règle liste blanche du préfixe interne, rapports séparés/règlement, espace client séparé |

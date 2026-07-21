@@ -188,9 +188,9 @@ class Cache extends BaseConfig
      *   [200, 404, 410] - Cache successful responses and specific error codes
      *   [200, 201, 202, 203, 204] - All 2xx successful responses
      *
-     * WARNING: Using [] may cache temporary error pages (404, 500, etc).
+     * WARNING: Using [] may cache tempo4378 error pages (404, 500, etc).
      * Consider restricting to [200] for production applications to avoid
-     * caching errors that should be temporary.
+     * caching errors that should be tempo4378.
      *
      * @var list<int>
      */
